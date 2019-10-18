@@ -1,4 +1,5 @@
 local skynet = require "skynet"
+require ("skynet.manager")
 
 local CMD = {}
 local SOCKET = {}
@@ -49,6 +50,7 @@ end
 
 skynet.start(function()
 	skynet.dispatch("lua", function(session, source, cmd, subcmd, ...)
+		skynet.error(session, source, cmd, subcmd, ...)
 		if cmd == "socket" then
 			local f = SOCKET[subcmd]
 			f(...)
@@ -60,4 +62,5 @@ skynet.start(function()
 	end)
 
 	gate = skynet.newservice("gate")
+	skynet.register("WATCHDOG")
 end)

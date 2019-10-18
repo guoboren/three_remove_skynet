@@ -119,6 +119,30 @@ $(LUA_CLIB_PATH)/ltls.so : lualib-src/ltls.c | $(LUA_CLIB_PATH)
 $(LUA_CLIB_PATH)/lpeg.so : 3rd/lpeg/lpcap.c 3rd/lpeg/lpcode.c 3rd/lpeg/lpprint.c 3rd/lpeg/lptree.c 3rd/lpeg/lpvm.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) -I3rd/lpeg $^ -o $@ 
 
+
+
+BUILD = pbs
+
+$(BUILD) :
+	$(MKDIR) $(BUILD)
+
+PROTOSRCS = test.proto 
+
+PROTO :=
+
+define PROTO_temp
+  TAR :=  $(BUILD)/$(notdir $(basename $(1)))
+  PROTO := $(PROTO) $$(TAR).pb
+  $$(TAR).pb : | $(BUILD)
+  $$(TAR).pb : protos/$(1)
+	protoc -o$$@ -Iprotos $$<
+endef
+
+$(foreach s,$(PROTOSRCS),$(eval $(call PROTO_temp,$(s))))
+
+proto : $(PROTO)
+
+
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 

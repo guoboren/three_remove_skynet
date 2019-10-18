@@ -1,0 +1,13 @@
+package test1;
+
+message TestPai {
+    required int32 type = 1;
+    required int32 value = 2;
+};
+
+message TestRole {
+    required int32 roleId = 1;
+    required string nickname = 2;
+    repeated TestPai paiArray = 3;
+};
+

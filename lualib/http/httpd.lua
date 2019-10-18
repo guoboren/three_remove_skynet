@@ -112,6 +112,29 @@ end
 local function writeall(writefunc, statuscode, bodyfunc, header)
 	local statusline = string.format("HTTP/1.1 %03d %s\r\n", statuscode, http_status_msg[statuscode] or "")
 	writefunc(statusline)
+	local resHeader = {
+		["Content-Type"] = {
+				"text/html;charset=utf-8"
+			},
+		['Access-Control-Allow-Origin'] = {
+			"*"
+		},
+		['Access-Control-Allow-Methods'] = {
+			"POST"
+		},
+		['Access-Control-Max-Age'] = {
+			1000
+		}
+	}
+	for k,v in pairs(resHeader) do
+		if type(v) == "table" then
+			for _,v in ipairs(v) do
+				writefunc(string.format("%s: %s\r\n", k,v))
+			end
+		else
+			writefunc(string.format("%s: %s\r\n", k,v))
+		end
+	end
 	if header then
 		for k,v in pairs(header) do
 			if type(v) == "table" then
