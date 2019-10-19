@@ -1,4 +1,6 @@
 local threeRemoveConfig = require "config.three_remove_config"
+require "functions"
+
 local threeRemoveCtrl = {}
 local PANE_WIDTH = 10
 local PANE_HEIGHT = 10
@@ -22,20 +24,27 @@ local function getRandomId()
     --     end
     -- end
     -- return result
-    return math.random(0, #threeRemoveConfig.config)
+    return math.random(0, #threeRemoveConfig.config - 1)
 end
 
 function threeRemoveCtrl.initPane(username, password)
     local pane = {}
-    for i=1, PANE_WIDTH do
+    local i = 1
+    local j = 1
+    while i <= PANE_WIDTH do
         pane[i] = {}
-        for j=1, PANE_HEIGHT do
+        while j <= PANE_HEIGHT do
             local id = getRandomId()
-            if (i-2 >= 1 and pane[i-2][j] ~= id) and 
-                (i-1 >= 1 and pane[i-1][j] ~= id) then
-                pane[i][j] = 
+            if (i-2 >= 1 and pane[i-2] ~= nil and pane[i-2][j] == id) and (i-1 >= 1 and pane[i-1] ~= nil and pane[i-1][j] == id) or 
+                (j-2 >= 1 and pane[i][j-2] == id) and (j-1 >= 1 and pane[i][j-1] == id) then
+                j = j - 1
+            else
+                pane[i][j] = id
             end
+            j = j + 1
         end
+        j = 1
+        i = i + 1
     end
     return {
         errorCode = 0, 
