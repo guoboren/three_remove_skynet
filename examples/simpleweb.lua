@@ -132,8 +132,6 @@ skynet.start(function()
 						local module = requestParams.module
 						local method = requestParams.method
 						local params = cjson2.decode(requestParams.param)
-						dump(params[1])
-						dump(params[2])
 						local ec, result = http_ctrl.doCmd(module, method, 
 							params[1],
 							params[2],
@@ -150,6 +148,7 @@ skynet.start(function()
 							errorCode = ec,
 							data = result
 						}
+						-- dump(jsonData)
 						response(id, 200, cjson2.encode(jsonData))
 					end
 				end

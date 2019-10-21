@@ -29,11 +29,10 @@ function CMD.doExchange(roleId, exchange)
     local p2 = exchange[2]
     local pane = panes[roleId]
     assert(pane)
-    assert(pane[p1.x + 1][p1.y + 1] == p1.id)
-    assert(pane[p2.x + 1][p2.y + 1] == p2.id)
-    pane[p1.x + 1][p1.y + 1] = p2.id
-    pane[p2.x + 1][p2.y + 1] = p1.id
-    return SystemError.success
+    assert(pane[p1.x][p1.y] == p1.id)
+    assert(pane[p2.x][p2.y] == p2.id)
+    dump(11111111111111)
+    return SystemError.success, trCtrl.doExchange(p1, p2, pane)
 end
 
 function CMD.exit(roleId)
@@ -47,7 +46,6 @@ end
 
 skynet.start(function()
     skynet.dispatch("lua", function(_, _, method, ...)
-        print(method)
         assert(method ~= nil)
         local func = CMD[method]
         assert(func)

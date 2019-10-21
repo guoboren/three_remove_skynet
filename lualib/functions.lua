@@ -323,6 +323,12 @@ function table.merge(dest, src)
     end
 end
 
+function table.mergeNumberArray(dest, src)
+    for k, v in pairs(src) do
+        dest[#dest + 1] = v
+    end
+end
+
 
 --[[--
 
