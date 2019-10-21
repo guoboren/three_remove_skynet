@@ -1,33 +1,18 @@
 local threeRemoveConfig = require "config.three_remove_config"
 require "functions"
+require "errorCode"
+local cjson = require "cjson"
+local cjson2 = cjson.new()
 
 local threeRemoveCtrl = {}
 local PANE_WIDTH = 10
 local PANE_HEIGHT = 10
---[[
-
-    返回格式统一为
-    {
-        errorCode: ...,
-        data: {}
-    }
-
-]]
 
 local function getRandomId()
-    -- local num = math.random(0, threeRemoveConfig.total)
-    -- local result = -1
-    -- for _, v in pairs(threeRemoveConfig.config) do
-    --     if num >= v.weight then
-    --         result = v.id
-    --         break
-    --     end
-    -- end
-    -- return result
     return math.random(0, #threeRemoveConfig.config - 1)
 end
 
-function threeRemoveCtrl.initPane(username, password)
+function threeRemoveCtrl.initPane(roleId)
     local pane = {}
     local i = 1
     local j = 1
@@ -46,17 +31,17 @@ function threeRemoveCtrl.initPane(username, password)
         j = 1
         i = i + 1
     end
-    return {
-        errorCode = 0, 
-        data = pane
-    }
+    return pane
 end
 
 function threeRemoveCtrl.getConfig()
-    return {
-        errorCode = 0, 
-        data = threeRemoveConfig.data
-    }
+    return SystemError.success, threeRemoveConfig.data
+end
+
+function threeRemoveCtrl.doExchange(roleId, exchange)
+    local p1 = exchange[1]
+    local p2 = exchange[2]
+    return SystemError.success
 end
 
 return threeRemoveCtrl

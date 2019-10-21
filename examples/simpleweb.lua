@@ -7,10 +7,12 @@ local http_ctrl = require "http.http_ctrl"
 local cjson = require "cjson"
 local cjson2 = cjson.new()
 cjson2.encode_sparse_array(true)
+require "functions"
+require "errorCode"
+
 local table = table
 local string = string
 
-require "functions"
 
 local json = require("json")
 
@@ -117,7 +119,6 @@ skynet.start(function()
 				-- end
 				-- table.insert(tmp, "-----body----\n" .. body)
 				local requestParams = urllib.parse_query(body)
-				-- dump(requestParams)
 				if method ~= 'POST' then
 					tmp.data = {}
 					tmp.errorCode = 1
@@ -130,20 +131,26 @@ skynet.start(function()
 					else
 						local module = requestParams.module
 						local method = requestParams.method
-						local result = http_ctrl.doCmd(module, method, 
-							requestParams['param[0]'],
-							requestParams['param[1]'],
-							requestParams['param[2]'],
-							requestParams['param[3]'],
-							requestParams['param[4]'],
-							requestParams['param[5]'],
-							requestParams['param[6]'],
-							requestParams['param[7]'],
-							requestParams['param[8]'],
-							requestParams['param[9]'],
-							requestParams['param[10]']
+						local params = cjson2.decode(requestParams.param)
+						dump(params[1])
+						dump(params[2])
+						local ec, result = http_ctrl.doCmd(module, method, 
+							params[1],
+							params[2],
+							params[3],
+							params[4],
+							params[5],
+							params[6],
+							params[7],
+							params[8],
+							params[9],
+							params[10]
 						)
-						response(id, 200, cjson2.encode(result))
+						local jsonData = {
+							errorCode = ec,
+							data = result
+						}
+						response(id, 200, cjson2.encode(jsonData))
 					end
 				end
 			end
