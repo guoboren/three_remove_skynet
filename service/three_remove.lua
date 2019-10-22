@@ -31,12 +31,11 @@ function CMD.doExchange(roleId, exchange)
     assert(pane)
     assert(pane[p1.x][p1.y] == p1.id)
     assert(pane[p2.x][p2.y] == p2.id)
-    dump(11111111111111)
-    return SystemError.success, trCtrl.doExchange(p1, p2, pane)
+    local result = trCtrl.doRemove(p1, p2, pane)
+    return SystemError.success, result
 end
 
 function CMD.exit(roleId)
-    print(roleId)
     if panes[roleId] == nil then
         return SystemError.notExist
     end

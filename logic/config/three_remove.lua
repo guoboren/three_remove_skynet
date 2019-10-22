@@ -1,13 +1,13 @@
 local threeRemove = {
     [0] = {
         id = 0,
-        color = "#FFF68F",
+        color = "#4169E1",
         score = 1,
         weight = 130
     },
     [1] = {
         id = 1,
-        color = "#FFE4E1",
+        color = "#FFFF00",
         score = 2,
         weight = 120
     },
@@ -31,7 +31,7 @@ local threeRemove = {
     },
     [5] = {
         id = 5,
-        color = "#CAFF70",
+        color = "#B8860B",
         score = 6,
         weight = 80
     },
@@ -55,7 +55,7 @@ local threeRemove = {
     },
     [9] = {
         id = 9,
-        color = "#8B7500",
+        color = "#CDBE70",
         score = 10,
         weight = 40
     },
