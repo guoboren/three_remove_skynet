@@ -2,7 +2,8 @@ local skynet = require "skynet"
 require "errorCode"
 
 local httpModule = {
-    ['three-remove'] = SERVICE.THREE_REMOVE
+    ['three-remove'] = SERVICE.THREE_REMOVE,
+    ['three-remove2'] = SERVICE.THREE_REMOVE2
 }
 
 local httpCtrl = {}

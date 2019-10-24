@@ -329,6 +329,13 @@ function table.mergeNumberArray(dest, src)
     end
 end
 
+function table.length(tbl)
+    local length = 0
+    for _, v in pairs(tbl) do
+        length = length + 1
+    end
+    return length
+end
 
 --[[--
 

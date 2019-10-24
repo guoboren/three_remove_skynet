@@ -5,7 +5,7 @@ cjson2.encode_sparse_array(true)
 require "functions"
 require "errorCode"
 require "skynet.manager"
-local trCtrl = require "three_remove.three_remove_ctrl"
+local trCtrl = require "three_remove2.three_remove_ctrl2"
 
 local CMD = {}
 
@@ -19,21 +19,18 @@ function CMD.initPane(roleId)
     if panes[roleId] then
         return SystemError.success, panes[roleId]
     end
-    local pane = trCtrl.initPane(roleId)
+    local pane = trCtrl.initPane()
     panes[roleId] = pane
     return SystemError.success, pane
 end
 
 function CMD.doExchange(roleId, exchange)
-    local p1 = exchange[1]
-    local p2 = exchange[2]
     local pane = panes[roleId]
-    assert(pane)
-    -- assert(pane[p1.x][p1.y] == p1.id)
-    -- assert(pane[p2.x][p2.y] == p2.id)
-    pane[p1.x][p1.y] = p2.id
-    pane[p2.x][p2.y] = p1.id
-    local result = trCtrl.doRemove(p1, p2, pane)
+    assert(pane ~= nil)
+    local result = trCtrl.doRemove(pane, exchange)
+    if table.length(result) == 0 then
+        return SystemError.noRemove, result
+    end
     return SystemError.success, result
 end
 
@@ -52,5 +49,5 @@ skynet.start(function()
         assert(func)
         return skynet.ret(skynet.pack(func(...)))
     end)
-    skynet.register(SERVICE.THREE_REMOVE)
+    skynet.register(SERVICE.THREE_REMOVE2)
 end)

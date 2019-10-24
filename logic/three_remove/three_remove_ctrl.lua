@@ -42,12 +42,12 @@ function _canFill(p, pane)
     return true
 end
 
-function _fillNil(pane)
+function _fillNil(pane, removeRange)
     local fillPoints = {}
     local i = 1
-    local j = 1
-    while i <= PANE_HEIGHT do
-        while j <= PANE_WIDTH do
+    local j = removeRange.minY
+    while i <= removeRange.maxX - removeRange.minX + 1 do
+        while j <= removeRange.maxY do
             if pane[i][j] == -1 then
                 local p = {
                     id = getRandomId(),
@@ -268,19 +268,37 @@ function _updatePane(removes, pane)
         end
     end
     return {
+        minX = minX,
         minY = minY, 
-        maxY = maxY
+        maxY = maxY,
+        maxX = maxX
     }
 end
 
+function _getLastLinePoints(left, right, removes)
+    local result = {}
+    local maxIndex = right - left + 1
+    local margin = left - 1
+    for i = 1, maxIndex do
+        for _, v in pairs(removes) do
+            if result[i] ~= nil then
+                if result[i].x < v.x and result[i].y == v.y then
+                    result[i] = v
+                end
+            else
+                if v.y == i + margin then
+                    result[i] = v
+                end
+            end
+        end
+    end
+    return result
+end
+
 function threeRemoveCtrl.doRemove(p1, p2, pane)
-    pane[p1.x][p1.y] = p2.id
-    pane[p2.x][p2.y] = p1.id
-    local _id = p1.id
-    p1.id = p2.id
-    p2.id = _id
     local result = {}
     local removes = {}
+
     if p1.y == p2.y and p1.x > p2.x or 
        p1.y == p2.y and p1.x < p2.x or 
        p1.x == p2.x and p1.y > p2.y or 
@@ -311,12 +329,17 @@ function threeRemoveCtrl.doRemove(p1, p2, pane)
     result.isRemove = false
     result.removeRange = nil
     result.fillPoints = nil
+    result.lastPoints = nil
     if #removes > 0 then
         result.removes = removes
         result.isRemove = true
         result.removeRange = _updatePane(removes, pane)
-        result.fillPoints = _fillNil(pane)
+        result.lastPoints = _getLastLinePoints(result.removeRange.minY, result.removeRange.maxY, removes)
+        result.fillPoints = _fillNil(pane, result.removeRange)
     end
+
+    
+
     return result
 end
 
